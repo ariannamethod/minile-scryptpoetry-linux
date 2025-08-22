@@ -98,7 +98,7 @@ def run_script(code: str) -> str:
             or f"command failed with exit code {exc.returncode}"
         ).strip()
         log_error(f"run_script failed: {error_msg}")
-        return error_msg
+        return ""  # Молчаливый фолбэк вместо показа ошибки
 
 
 @dataclass
