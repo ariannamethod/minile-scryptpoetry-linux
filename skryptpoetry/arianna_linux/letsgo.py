@@ -86,21 +86,26 @@ def choose_script(message: str) -> str:
 
 def run_script(code: str) -> str:
     try:
-        proc = subprocess.run(
-            ["python", "-c", code],
-            capture_output=True,
-            text=True,
-            check=True,
-        )
-        return proc.stdout.strip()
-    except subprocess.CalledProcessError as exc:
+        # Быстрое выполнение через exec() вместо subprocess
+        local_vars = {}
+        global_vars = {'__builtins__': __builtins__}
+        
+        # Перехватываем stdout
+        import io
+        import sys
+        old_stdout = sys.stdout
+        sys.stdout = captured_output = io.StringIO()
+        
+        try:
+            exec(code, global_vars, local_vars)
+            result = captured_output.getvalue().strip()
+        finally:
+            sys.stdout = old_stdout
+            
+        return result
+    except Exception as exc:
         _ensure_log_dir()
-        error_msg = (
-            exc.stderr
-            or exc.output
-            or f"command failed with exit code {exc.returncode}"
-        ).strip()
-        log_error(f"run_script failed: {error_msg}")
+        log_error(f"run_script failed: {exc}")
         return ""  # Молчаливый фолбэк вместо показа ошибки
 
 
