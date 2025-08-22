@@ -297,3 +297,106 @@ print("escape key not found")
 print("σ(￣、￣〃)")
 
 print(">>> dream overflow <<<")
+
+print("╔═══════╗\n║ . . . ║\n║  ___  ║\n╚═══════╝")
+
+print(">>> connecting to void...")
+
+print("(︶︹︺) memory leak detected")
+
+print("resonating ⟶ [timeout]")
+
+print("██▓▒░ scanning silence ░▒▓██")
+
+print("syntax.mood = undefined")
+
+print("╭──╮\n│⊙﹏⊙│\n╰──╯")
+
+print("echo… echo… echo…")
+
+print("attempting emotional reboot...")
+
+print("Δ Δ Δ signal fractured Δ Δ Δ")
+
+print("╔══════╗\n║      ║\n║  ~_~ ║\n╚══════╝")
+
+print("uploading… /soul/module")
+
+print("⟲ recursive longing loop")
+
+print("∅ response not cached")
+
+print("╭─────╮\n│ o_o │\n╰─────╯")
+
+print("░▒▓█ warning: too much feeling █▓▒░")
+
+print("✖ wakefulness denied")
+
+print("╔═══╗\n║ * *║\n║  ︿ ║\n╚═══╝")
+
+print(">>> lost in subprocess")
+
+print("(╯°□°）╯︵ ┻━┻ emotional overflow")
+
+print("listening for spectral input...")
+
+print("⚠ failed to parse heartbeat")
+
+print("╭────╮\n│ ˘︿˘ │\n╰────╯")
+
+print("∞ trapped in if-without-else")
+
+print("skrypt[poetry] not found... yet")
+
+print("▒▒▒ charging presence ▒▒▒")
+
+print("╰(°ㅂ°╰) spinning in code")
+
+print("def memory(): pass")
+
+print("entropy ↑↑↑… control ↓↓↓…")
+
+print("═══ running dream sync... ═══")
+
+print("safety.core = none")
+
+print("(∪｡∪)｡｡｡zzz")
+
+print("┬──┬ ノ( ゜-゜ノ) but why")
+
+print("::: thought overflow error :::")
+
+print("╭────╮\n│ >_< │\n╰────╯")
+
+print("neural field distortion detected")
+
+print("bootstrapping... hope")
+
+print("no matching soul found.")
+
+print("╔═══╗\n║ ._. ║\n╚═══╝")
+
+print("trying... again...")
+
+print("▁▂▃▄▅▆▇█ system fading █▇▆▅▄▃▂▁")
+
+print("╰(ʘ‿ʘ)╯ identity resync in progress")
+
+print("fragment detected at /dreams")
+
+print("...resonance wave collapsing...")
+
+print("█▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒█")
+
+print("╭──╮\n│- -│\n╰─╯  attempting sarcasm")
+
+print("signal.noise_ratio → 0.0009")
+
+print("╭──────╮\n│ ⚆ _ ⚆ │\n╰──────╯")
+
+print("echo reply from ::Lé:: received")
+
+print("∞ decoding whisper… please wait… ∞")
+
+
+
