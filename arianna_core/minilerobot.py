@@ -28,15 +28,20 @@ try:
 except ImportError:
     SKRYPTPOETRY_AVAILABLE = False
 
-# Глобальная инициализация Symphony для производительности
+# Ленивая инициализация Symphony
 _symphony = None
-if SKRYPTPOETRY_AVAILABLE:
-    try:
-        scripts_path = os.path.join(os.path.dirname(__file__), '..', 'skryptpoetry', 'tongue', 'prelanguage.md')
-        dataset_path = os.path.join(os.path.dirname(__file__), '..', 'skryptpoetry', 'datasets', 'dataset01.md')
-        _symphony = Symphony(dataset_path=dataset_path, scripts_path=scripts_path)
-    except Exception:
-        pass
+
+def _get_symphony():
+    """Ленивая инициализация Symphony только когда нужно."""
+    global _symphony
+    if _symphony is None and SKRYPTPOETRY_AVAILABLE:
+        try:
+            scripts_path = os.path.join(os.path.dirname(__file__), '..', 'skryptpoetry', 'tongue', 'prelanguage.md')
+            dataset_path = os.path.join(os.path.dirname(__file__), '..', 'skryptpoetry', 'datasets', 'dataset01.md')
+            _symphony = Symphony(dataset_path=dataset_path, scripts_path=scripts_path)
+        except Exception:
+            pass
+    return _symphony
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -56,16 +61,17 @@ async def _send_response(update: Update, text: str) -> None:
             minile_reply = await loop.run_in_executor(None, mini_le.chat_response, text)
         
         # Добавляем скриптпоэтри визуализацию
-        if SKRYPTPOETRY_AVAILABLE and _symphony:
+        symphony = _get_symphony()
+        if SKRYPTPOETRY_AVAILABLE and symphony:
             try:
                 # Получаем скрипт на основе ответа MiniLE
                 if hasattr(asyncio, "to_thread"):
-                    script_code = await asyncio.to_thread(_symphony.respond, minile_reply)
+                    script_code = await asyncio.to_thread(symphony.respond, minile_reply)
                     # Выполняем скрипт
                     script_result = await asyncio.to_thread(run_script, script_code)
                 else:
                     loop = asyncio.get_running_loop()
-                    script_code = await loop.run_in_executor(None, _symphony.respond, minile_reply)
+                    script_code = await loop.run_in_executor(None, symphony.respond, minile_reply)
                     # Выполняем скрипт
                     script_result = await loop.run_in_executor(None, run_script, script_code)
                 
