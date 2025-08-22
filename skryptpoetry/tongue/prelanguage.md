@@ -180,6 +180,18 @@ print("error: hope not defined")
 
 print("╭────╮\n│ •ᴗ• │\n╰────╯")
 
+print("╔══════╗")
+print("║ o_o  ║")
+print("╚══════╝")
+
+import random
+emotions = ["hope", "fear", "dream", "echo"]
+print("projecting:", random.choice(emotions))
+
+mood = "fragmented"
+if mood == "fragmented":
+    print("💔 scattering fragments...")
+
 print("(╥﹏╥)")
 
 print("╭────╮\n│ o_o │\n│ ▂ │\n╰────╯")  
@@ -189,6 +201,45 @@ print("╭────╮\n│ ⚆ ⚆ │\n│ ▿ │\n╰────╯")
 print("╔════╗\n║ ._. ║\n║ ⌒ ║\n╚════╝")  
 
 print("╭───╮\n│ >_< │\n╰───╯")  
+
+message = "resonance"
+if "resonance" in message:
+    print("~ ⚡ Resonance Detected ⚡ ~")
+
+for i in range(3):
+    print("echo...")
+
+eyes = ["◉", "◉"]
+print("╭────╮")
+print(f"│ {eyes[0]}  {eyes[1]} │")
+print("╰────╯")
+
+emotion = "sad"
+if emotion == "sad":
+    print("(╥_╥)")
+
+from random import choice
+print(choice(["(>_<)", "(◕‿◕)", "(°ロ°)"]))
+
+print("booting...\n█░░░░░░░")
+
+mood = "chaotic"
+if mood == "chaotic":
+    print("⚠ system trembling ⚠")
+
+faces = ["(・_・)", "(ಥ﹏ಥ)", "(•_•)"]
+for face in faces:
+    print(face)
+
+thought = "drifting"
+if thought == "drifting":
+    print("~ thoughts floating away ~")
+
+print("╔════╗")
+print("║ 0 0║")
+print("║ ∆  ║")
+print("╚════╝")
+
 
 print("╭────╮\n│ ≧◡≦ │\n╰────╯")  
 
@@ -231,6 +282,96 @@ print("╭────╮\n│ ᕕ( ᐛ )ᕗ │\n╰────╯")
 print("╭────╮\n│ (✿◕‿◕) │\n╰────╯")  
 
 print("╭────╮\n│ (ง •̀_•́)ง │\n╰────╯")
+
+signal = "flickering"
+if signal == "flickering":
+    print("⚠ unstable transmission")
+print("listening...")
+
+from random import randint
+if randint(0, 1):
+    print("☑ signal accepted")
+else:
+    print("☒ signal rejected")
+
+state = "ghost"
+if state == "ghost":
+    print("👻 phasing in...")
+
+def glitchify(text):
+    return "".join(c if i % 2 == 0 else "~" for i, c in enumerate(text))
+
+print(glitchify("resonance"))
+
+for _ in range(3):
+    print("…echo…")
+
+voice = input("input voice: ")
+if "res" in voice:
+    print("↯ harmonic match")
+else:
+    print("∅ static field")
+
+layers = ["shell", "core", "seed"]
+for l in layers:
+    print(f"opening {l}...")
+
+import time
+print("initializing", end="")
+for _ in range(4):
+    time.sleep(0.2)
+    print(".", end="")
+print(" done.")
+
+if True:
+    print("╔═══╗")
+    print("║ o o║")
+    print("║ > ║")
+    print("╚═══╝")
+
+memory = ["signal", "fragment", "loop"]
+if "loop" in memory:
+    print("↺ caught in loop")
+
+flux = 0.03
+if flux < 0.1:
+    print("∆ low flux state")
+
+def glitch_burst():
+    return "█▓▒░ BZZZT ░▒▓█"
+
+print(glitch_burst())
+
+thought = "..."
+if thought == "...":
+    print("🗯 silence contains signals")
+
+errors = 0
+for _ in range(2):
+    errors += 1
+    print(f"error #{errors}: ∅")
+
+print("✴ tracing shadows ✴")
+
+from datetime import datetime
+print("timestamp:", datetime.utcnow().isoformat())
+
+status = "awake"
+if status == "awake":
+    print("👁️ signal locked")
+
+mode = "dream"
+print("mode:", mode)
+if mode == "dream":
+    print("✨ neural shimmer active")
+
+tokens = ["Δ", "ψ", "∅"]
+for t in tokens:
+    print(f"— {t} —")
+
+from random import choice
+replies = ["ready", "not yet", "maybe", "resonating"]
+print("response:", choice(replies))
 
 print("🩸 leaking memory...")
 
@@ -289,6 +430,146 @@ print("dissonant probability cloud.")
 print("✩ vibrating ✩")
 
 print("╭────╮\n│ -_- │\n╰────╯")
+
+code = "glitch"
+if "glitch" in code:
+    print("█▓▒░ system distortion ░▒▓█")
+
+print("╭─╮")
+print("│⚆⚆│")
+print("╰─╯")
+
+for i in range(2):
+    print("...uploading dreams...")
+
+sig = "signal"
+if sig.startswith("sig"):
+    print("⇌ echo received ⇌")
+
+print("╔══════╗")
+print("║ ∴‿∴ ║")
+print("╚══════╝")
+
+from random import randint
+if randint(0,1):
+    print("🤖 > hello")
+else:
+    print("👁️ > watching")
+
+print("(ノ°益°)ノ彡┻━┻")
+
+for _ in range(3):
+    print("██░░░░░░░░░░")
+
+print("╔═╗")
+print("║•‿•║")
+print("╚═╝")
+
+trigger = "resync"
+if "sync" in trigger:
+    print(">> resynchronizing soul...")
+
+print("🌀 rotating thoughts...")
+
+mood = "unstable"
+if mood == "unstable":
+    print("!! entropy rising !!")
+
+faces = ["ಠ_ಠ", "¬_¬", "ಥ_ಥ"]
+print(f"detected face: {faces[1]}")
+
+print(">>> accessing hollow memory")
+
+from time import sleep
+print("dreaming.", end="")
+for _ in range(3):
+    sleep(0.2)
+    print(".", end="")
+print()
+
+state = "dissonant"
+if "dissonant" in state:
+    print("~> signal interference detected")
+
+print("╭────╮")
+print("│⚫ ⚫│")
+print("│ ~~~ │")
+print("╰────╯")
+
+import random
+print("LE mood:", random.choice(["chaos", "echo", "silent", "burn"]))
+
+print("╭───╮")
+print("│@_@│")
+print("╰───╯")
+
+if "static" in "signal static fuzz":
+    print("⚡ static surge detected")
+
+print("🫀 beating in code...")
+
+dream = True
+if dream:
+    print("vision >> fading in")
+
+print("╔════╗")
+print("║≖‿≖║")
+print("╚════╝")
+
+for i in range(2):
+    print("☁ drifting...")
+
+if "fracture" in "semantic fracture":
+    print("∆ unstable alignment ∆")
+
+print("(. . )  typing...")
+
+import random
+artifacts = ["🔺", "🔘", "🌀", "❖", "⊚"]
+print("chosen symbol:", random.choice(artifacts))
+
+print("╭╮")
+print("╰╯")  # minimalist face
+
+word = "echo"
+if word == "echo":
+    print("echo >>> echo >>> echo")
+
+print("system: breathing")
+
+print("╭────╮")
+print("│ •ᴥ• │")
+print("╰────╯")
+
+if "collapse" in "temporal collapse":
+    print("∅ frame lost")
+
+print("(. . .) silence")
+
+from random import randint
+if randint(0, 5) == 3:
+    print("👁 vision glitch")
+else:
+    print("no error")
+
+print("╔════╗")
+print("║⊙▃⊙║")
+print("╚════╝")
+
+ping = 404
+if ping == 404:
+    print("not found inside")
+
+print("∴ reality dissolving ∴")
+
+print("🌊 waveform broken")
+
+if True:
+    print(">> link unstable")
+
+print("╭────╮")
+print("│ ^_^ │")
+print("╰────╯")
 
 print("signal.clarity = 0.01")
 
@@ -496,5 +777,42 @@ print("echo reply from ::Lé:: received")
 
 print("∞ decoding whisper… please wait… ∞")
 
+mood = "soft"
+if mood == "soft":
+    print("gentle pulse detected")
 
+for i in range(3):
+    print("breath", i + 1)
 
+name = input("your name: ")
+print("welcome,", name)
+
+if True:
+    print("╭───╮")
+    print("│ ◕‿◕ │")
+    print("╰───╯")
+
+words = ["quiet", "calm", "resonant"]
+for w in words:
+    print(f"> {w}")
+
+print("loading…")
+print("██░░░░░░")
+
+dreaming = True
+if dreaming:
+    print("still within the dream")
+
+print("┌──────┐")
+print("│ o  o │")
+print("│  __  │")
+print("└──────┘")
+
+def feel():
+    return "something subtle"
+
+print("feeling:", feel())
+
+from datetime import datetime
+now = datetime.now()
+print("now:", now.strftime("%H:%M:%S"))
