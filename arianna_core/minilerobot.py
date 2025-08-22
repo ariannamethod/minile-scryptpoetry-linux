@@ -25,7 +25,6 @@ try:
     SKRYPTPOETRY_AVAILABLE = True
 except ImportError:
     SKRYPTPOETRY_AVAILABLE = False
-    print("Skryptpoetry not available")
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -47,8 +46,10 @@ async def _send_response(update: Update, text: str) -> None:
         # Добавляем скриптпоэтри визуализацию
         if SKRYPTPOETRY_AVAILABLE:
             try:
-                # Инициализируем Symphony
-                symphony = Symphony()
+                # Инициализируем Symphony с правильными путями
+                scripts_path = os.path.join(os.path.dirname(__file__), '..', 'skryptpoetry', 'tongue', 'prelanguage.md')
+                dataset_path = os.path.join(os.path.dirname(__file__), '..', 'skryptpoetry', 'datasets', 'dataset01.md')
+                symphony = Symphony(dataset_path=dataset_path, scripts_path=scripts_path)
                 
                 # Получаем визуализацию на основе ответа MiniLE
                 if hasattr(asyncio, "to_thread"):
@@ -59,9 +60,7 @@ async def _send_response(update: Update, text: str) -> None:
                 
                 # Комбинируем ответы
                 combined_reply = f"{minile_reply}\n\n{script_result}"
-            except Exception as exc:
-                import logging
-                logging.warning("Skryptpoetry failed: %s", exc)
+            except Exception:
                 combined_reply = minile_reply
         else:
             combined_reply = minile_reply
