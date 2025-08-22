@@ -94,18 +94,8 @@ class Symphony:
         hash_seed = int(hashlib.sha256((message + str(len(self.user_messages))).encode()).hexdigest()[:8], 16)
         random.seed(hash_seed)
         
-        # Выбираем случайный скрипт из топ-30% по резонансу
-        scored_scripts = []
-        for script in options:
-            score = resonance(message, script)
-            scored_scripts.append((score, script))
-        
-        scored_scripts.sort(reverse=True)  # По убыванию резонанса
-        top_count = max(1, len(scored_scripts) // 3)  # Топ 30%
-        top_scripts = scored_scripts[:top_count]
-        
-        # Случайный выбор из топовых
-        return random.choice(top_scripts)[1]
+        # БЫСТРЫЙ выбор - берем случайный скрипт без медленного resonance
+        return random.choice(options)
 
     def respond(self, message: str) -> str:
         # Убираем медленный scan_and_train для скорости
