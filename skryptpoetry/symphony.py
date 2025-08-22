@@ -55,8 +55,7 @@ class Symphony:
         self.dataset_path = Path(dataset_path)
         self.scripts_path = Path(scripts_path)
         self.trainer = SkryptTrainer()
-        # Asynchronous initial training on datasets
-        self.trainer.train_async()
+        # Убираем медленную инициализацию обучения
         self.dataset_text = _load_file(self.dataset_path)
         self.scripts_text = _load_file(self.scripts_path)
         self.user_messages: List[str] = []
@@ -86,14 +85,27 @@ class Symphony:
             msg = "No scripts available"
             logging.warning(msg)
             raise RuntimeError(msg)
-        best_script = options[0]
-        best_score = -1.0
+        
+        # Добавляем случайность чтобы избежать повторов
+        import random
+        import hashlib
+        
+        # Используем хеш сообщения + время для псевдослучайности
+        hash_seed = int(hashlib.sha256((message + str(len(self.user_messages))).encode()).hexdigest()[:8], 16)
+        random.seed(hash_seed)
+        
+        # Выбираем случайный скрипт из топ-30% по резонансу
+        scored_scripts = []
         for script in options:
             score = resonance(message, script)
-            if score > best_score:
-                best_score = score
-                best_script = script
-        return best_script
+            scored_scripts.append((score, script))
+        
+        scored_scripts.sort(reverse=True)  # По убыванию резонанса
+        top_count = max(1, len(scored_scripts) // 3)  # Топ 30%
+        top_scripts = scored_scripts[:top_count]
+        
+        # Случайный выбор из топовых
+        return random.choice(top_scripts)[1]
 
     def respond(self, message: str) -> str:
         # Убираем медленный scan_and_train для скорости
@@ -103,17 +115,13 @@ class Symphony:
             self.trainer.train_on_text_async('\n'.join(self.user_messages))
             self.user_messages.clear()
 
-        # Metrics against dataset
-        self.dataset_text = _load_file(self.dataset_path)
-        dataset_segment = retrieve(message, [self.dataset_text])
-        ent = entropy(message)
-        ppl = perplexity(message)
-        res = resonance(message, dataset_segment)
+        # Быстрый выбор скрипта без медленных операций
         try:
             script = self._choose_script(message)
         except (FileNotFoundError, ValueError, RuntimeError) as exc:
             return str(exc)
-        log_interaction(message, script, ent, ppl, res)
+        
+        # Убираем медленные метрики и логирование для скорости
         return script
 
 
