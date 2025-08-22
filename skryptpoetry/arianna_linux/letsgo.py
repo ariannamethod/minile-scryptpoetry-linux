@@ -9,7 +9,10 @@ import sys
 import readline
 import atexit
 import asyncio
-import importlib.metadata as importlib_metadata
+try:
+    import importlib.metadata as importlib_metadata
+except ImportError:
+    import importlib_metadata
 from datetime import datetime
 from pathlib import Path
 from collections import deque
@@ -149,7 +152,7 @@ SETTINGS = _load_settings()
 USE_COLOR = USE_COLOR and SETTINGS.use_color
 
 
-def _save_settings(path: Path | None = None) -> None:
+def _save_settings(path = None) -> None:
     path = path or CONFIG_PATH
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w") as fh:
@@ -170,7 +173,7 @@ PY_TIMEOUT = 5
 
 ERROR_LOG_PATH = LOG_DIR / "errors.log"
 
-Handler = Callable[[str], Awaitable[Tuple[str, str | None]]]
+Handler = Callable[[str], Awaitable[Tuple[str, str]]]
 
 
 def _ensure_log_dir() -> None:
