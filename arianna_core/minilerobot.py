@@ -15,6 +15,18 @@ from telegram.ext import (
 
 from . import mini_le
 
+# Импортируем скриптпоэтри
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'skryptpoetry'))
+try:
+    from symphony import Symphony
+    from skryptmetrics import entropy, perplexity, resonance
+    SKRYPTPOETRY_AVAILABLE = True
+except ImportError:
+    SKRYPTPOETRY_AVAILABLE = False
+    print("Skryptpoetry not available")
+
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Respond to the /start command."""
@@ -23,22 +35,46 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 
 async def _send_response(update: Update, text: str) -> None:
-    """Send mini_LE's response to the user."""
+    """Send mini_LE's response with skryptpoetry visualization."""
     try:
+        # Получаем ответ от MiniLE
         if hasattr(asyncio, "to_thread"):
-            reply = await asyncio.to_thread(mini_le.chat_response, text)
+            minile_reply = await asyncio.to_thread(mini_le.chat_response, text)
         else:  # Python 3.8 fallback
             loop = asyncio.get_running_loop()
-            reply = await loop.run_in_executor(None, mini_le.chat_response, text)
+            minile_reply = await loop.run_in_executor(None, mini_le.chat_response, text)
+        
+        # Добавляем скриптпоэтри визуализацию
+        if SKRYPTPOETRY_AVAILABLE:
+            try:
+                # Инициализируем Symphony
+                symphony = Symphony()
+                
+                # Получаем визуализацию на основе ответа MiniLE
+                if hasattr(asyncio, "to_thread"):
+                    script_result = await asyncio.to_thread(symphony.respond, minile_reply)
+                else:
+                    loop = asyncio.get_running_loop()
+                    script_result = await loop.run_in_executor(None, symphony.respond, minile_reply)
+                
+                # Комбинируем ответы
+                combined_reply = f"{minile_reply}\n\n{script_result}"
+            except Exception as exc:
+                import logging
+                logging.warning("Skryptpoetry failed: %s", exc)
+                combined_reply = minile_reply
+        else:
+            combined_reply = minile_reply
+            
     except Exception as exc:  # pragma: no cover - unexpected failure
         import logging
 
-        logging.exception("mini_LE chat_response failed: %s", exc)
+        logging.exception("Response generation failed: %s", exc)
         if update.message:
             await update.message.reply_text("Error: failed to generate response.")
         return
     if update.message:
-        await update.message.reply_text(reply)
+        await update.message.reply_text(combined_reply)
 
 
 async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
