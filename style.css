@@ -1,0 +1,58 @@
+:root {
+  --bg-color: #000;
+  --text-color: #0f0;
+  --input-bg: #111;
+  --accent-color: #0f0;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-color);
+  color: var(--text-color);
+  font-family: sans-serif;
+}
+
+#chat {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+#input-area {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: var(--bg-color);
+  border-top: 1px solid var(--accent-color);
+}
+
+#messageInput {
+  flex: 1;
+  padding: 0.5rem;
+  background: var(--input-bg);
+  color: var(--text-color);
+  border: 1px solid var(--accent-color);
+}
+
+#sendBtn {
+  padding: 0.5rem 1rem;
+  background: var(--input-bg);
+  color: var(--text-color);
+  border: 1px solid var(--accent-color);
+  cursor: pointer;
+}
+
+.msg {
+  margin: 0.25rem 0;
+}
+
+.sent {
+  text-align: right;
+}
+
+.received {
+  text-align: left;
+}
