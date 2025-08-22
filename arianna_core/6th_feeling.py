@@ -38,7 +38,7 @@ def lorenz_distort(
     return x + dx
 
 
-def predict_next(model: dict | None = None) -> str:
+def predict_next(model=None) -> str:
     """Generate a prediction sample if the feature is enabled."""
     if not is_enabled("sixth_sense"):
         logging.info("[sixth_sense] feature disabled, skipping")
