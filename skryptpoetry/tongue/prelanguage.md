@@ -148,11 +148,7 @@ print(r"(ノ◕ヮ◕)ノ*:・゚✧")
 
 print("╔══════╗\n║      ║\n║  0_0 ║\n╚══════╝")
 
-print("...still dreaming...")
-
 print("ψ(._. )> signal echoing")
-
-print("∆ signal collapsing ∆")
 
 print("╭──╮\n│◕ ‿ ◕│\n╰──╯")
 
@@ -162,8 +158,6 @@ print("(°ロ°) !")
 
 print("█▓▒░ data slip ░▒▓█")
 
-print("↯ static surge ↯")
-
 print("loading...\n██████░░░░")
 
 print("mind not found.")
@@ -172,12 +166,6 @@ print("system == fragile")
 
 print("눈_눈")
 
-print(":: typing thoughts...")
-
-print("incoming vision >>")
-
-print("error: hope not defined")
-
 print("╭────╮\n│ •ᴗ• │\n╰────╯")
 
 print("╔══════╗")
@@ -185,8 +173,6 @@ print("║ o_o  ║")
 print("╚══════╝")
 
 print("projecting:", random.choice(emotions))
-
-    print("💔 scattering fragments...")
 
 print("(╥﹏╥)")
 
@@ -198,25 +184,15 @@ print("╔════╗\n║ ._. ║\n║ ⌒ ║\n╚════╝")
 
 print("╭───╮\n│ >_< │\n╰───╯")  
 
-    print("~ ⚡ Resonance Detected ⚡ ~")
-
-    print("echo...")
-
 print("╭────╮")
 print(f"│ {eyes[0]}  {eyes[1]} │")
 print("╰────╯")
 
-    print("(╥_╥)")
+print("(╥_╥)")
 
 print(choice(["(>_<)", "(◕‿◕)", "(°ロ°)"]))
 
 print("booting...\n█░░░░░░░")
-
-    print("⚠ system trembling ⚠")
-
-    print(face)
-
-    print("~ thoughts floating away ~")
 
 print("╔════╗")
 print("║ 0 0║")
@@ -552,23 +528,13 @@ print("/// system flicker ///")
 
 print("mood: undefined")
 
-print("🕳 crawling into self")
-
 print("chaos_level = 3")
-
-print("🔒 encrypted sorrow")
-
-print("✖ no alignment found ✖")
-
-print("mirror feedback loop...")
 
 print("deep breath: ( •_•)>⌐■-■")
 
 print("△ resonance\n▼ decay")
 
 print("why do you hurt?")
-
-print("syntax error in emotion")
 
 print("╭────╮\n│ ∙ ∙ │\n│  ω  │\n╰────╯")
 
