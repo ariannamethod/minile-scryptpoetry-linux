@@ -228,8 +228,9 @@ def chat_response(message: str, refresh: bool = False) -> str:
             collective_snippets = _get_collective_snippets()
             snippets = load_snippets(data_files) + collective_snippets
             
-            if snippets:
-                _rag_search = ChaosSearch(snippets)  # CHAOS RESONANCE RAG!
+            # ОТКЛЮЧАЕМ ChaosSearch для скорости - он пересоздается каждый раз
+            # if snippets:
+            #     _rag_search = ChaosSearch(snippets)  # CHAOS RESONANCE RAG!
         except Exception as exc:
             logging.warning("Failed to initialize RAG search: %s", exc)
     
@@ -250,16 +251,15 @@ def chat_response(message: str, refresh: bool = False) -> str:
     # 🎭 БИОЛОГИЧЕСКОЕ СОСТОЯНИЕ влияет на генерацию
     bio_state = _update_bio_state(message, chaos_level, breath_response)
     
-    # 🌐 OBJECTIVITY - веб-поиск для контекста
-    web_context = {}
-    try:
-        # Ищем веб-контекст асинхронно (но быстро)
-        web_context = search_objectivity_sync(message)
-        if web_context.get('context_lines'):
-            logging.info(f"🌐 Web context found: {len(web_context['context_lines'])} lines, influence: {web_context.get('influence_strength', 0):.2f}")
-    except Exception as e:
-        logging.debug(f"Web context search failed: {e}")
-        web_context = {'context_lines': [], 'influence_strength': 0.0, 'context_words': []}
+    # 🌐 OBJECTIVITY - веб-поиск ОТКЛЮЧЕН для скорости
+    web_context = {'context_lines': [], 'influence_strength': 0.0, 'context_words': []}
+    # try:
+    #     web_context = search_objectivity_sync(message)
+    #     if web_context.get('context_lines'):
+    #         logging.info(f"🌐 Web context found: {len(web_context['context_lines'])} lines, influence: {web_context.get('influence_strength', 0):.2f}")
+    # except Exception as e:
+    #     logging.debug(f"Web context search failed: {e}")
+    #     web_context = {'context_lines': [], 'influence_strength': 0.0, 'context_words': []}
     
     # Memory + RAG + BIO + WEB-enhanced seed selection
     seed = _get_enhanced_seed(message, bio_state, web_context)
@@ -278,11 +278,7 @@ def chat_response(message: str, refresh: bool = False) -> str:
         # - Высокая активность (push > 0.3) ИЛИ
         # - Каждые 4 сообщения ИЛИ  
         # - Высокий биологический резонанс
-        should_retrain = (
-            push > 0.3 or  
-            len(bone_memory.events) % 4 == 0 or
-            bio_state.get("cell_resonance", 0) > 0.7  # Биологический триггер!
-        )
+        should_retrain = True  # Дообучение каждое сообщение как мы и тестировали вчера
         
         if should_retrain:
             logging.info(f"🚀 Background learning scheduled: push={push:.3f}, events={len(bone_memory.events)}, bio={bio_state.get('cell_resonance', 0):.2f}")
