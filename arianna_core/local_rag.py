@@ -95,29 +95,20 @@ class ChaosSearch:
         return 1.0
     
     def _calc_chaos_entropy(self, text: str) -> float:
-        """Calculate Shannon entropy for chaos scoring."""
+        """Fast chaos scoring based on text length and character diversity."""
         if not text:
             return 0.0
         
-        # Character-level entropy
-        char_counts = {}
-        for char in text.lower():
-            if char.isalnum():
-                char_counts[char] = char_counts.get(char, 0) + 1
+        # Быстрая оценка хаоса без медленного подсчета энтропии
+        unique_chars = len(set(c.lower() for c in text if c.isalnum()))
+        text_len = len(text)
         
-        if not char_counts:
+        if text_len == 0:
             return 0.0
             
-        total = sum(char_counts.values())
-        entropy = 0.0
-        for count in char_counts.values():
-            p = count / total
-            if p > 0:
-                entropy -= p * math.log2(p)
-        
-        # Нормализуем и усиливаем хаос
-        normalized = entropy / 5.0  # Примерная максимальная энтропия
-        return 0.5 + min(normalized, 1.0)  # От 0.5 до 1.5
+        # Простая формула: разнообразие символов / длина текста
+        diversity = unique_chars / min(text_len, 50)  # Ограничиваем длину для скорости
+        return 0.5 + min(diversity, 1.0)
     
     def _calc_temporal_factor(self, text: str) -> float:
         """Temporal decay for conversation history."""
