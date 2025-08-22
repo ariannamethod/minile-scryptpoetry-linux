@@ -7,12 +7,16 @@ import sys
 import asyncio
 import logging
 
-# Добавляем пути для импортов
-sys.path.append(os.path.join(os.path.dirname(__file__), 'skryptpoetry'))
-sys.path.append(os.path.join(os.path.dirname(__file__), 'skryptpoetry', 'arianna_linux'))
+# Добавляем пути для импортов (skryptbridge теперь в arianna_core)
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'skryptpoetry'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'skryptpoetry', 'arianna_linux'))
 
 # Импорты MiniLE
-from arianna_core import mini_le
+try:
+    from . import mini_le
+except ImportError:
+    # Fallback для прямого запуска
+    import mini_le
 
 # Импорты Skryptpoetry
 try:
@@ -23,20 +27,19 @@ except ImportError as e:
     logging.warning(f"Skryptpoetry not available: {e}")
     SKRYPTPOETRY_AVAILABLE = False
 
-# Глобальная Symphony для производительности
+# Глобальная Symphony - инициализируем сразу
 _symphony = None
+if SKRYPTPOETRY_AVAILABLE:
+    try:
+        scripts_path = os.path.join(os.path.dirname(__file__), '..', 'skryptpoetry', 'tongue', 'prelanguage.md')
+        dataset_path = os.path.join(os.path.dirname(__file__), '..', 'skryptpoetry', 'datasets', 'dataset01.md')
+        _symphony = Symphony(dataset_path=dataset_path, scripts_path=scripts_path)
+        logging.info("✅ Symphony initialized at import")
+    except Exception as e:
+        logging.error(f"❌ Symphony initialization failed: {e}")
 
 def _get_symphony():
-    """Ленивая инициализация Symphony."""
-    global _symphony
-    if _symphony is None and SKRYPTPOETRY_AVAILABLE:
-        try:
-            scripts_path = os.path.join(os.path.dirname(__file__), 'skryptpoetry', 'tongue', 'prelanguage.md')
-            dataset_path = os.path.join(os.path.dirname(__file__), 'skryptpoetry', 'datasets', 'dataset01.md')
-            _symphony = Symphony(dataset_path=dataset_path, scripts_path=scripts_path)
-            logging.info("✅ Symphony initialized")
-        except Exception as e:
-            logging.error(f"❌ Symphony initialization failed: {e}")
+    """Возвращает готовую Symphony."""
     return _symphony
 
 async def process_message(message: str) -> str:
