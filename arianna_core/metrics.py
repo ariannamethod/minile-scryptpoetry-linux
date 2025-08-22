@@ -21,7 +21,7 @@ def calculate_entropy(text: str) -> float:
     return -sum(p * math.log2(p) for p in freq.values())
 
 
-def calculate_affinity(text: str, words: Iterable[str] | None = None) -> float:
+def calculate_affinity(text: str, words = None) -> float:
     """Return the proportion of characters that belong to ``words``.
 
     ``words`` defaults to :data:`DEFAULT_AFFINITY_WORDS`.
