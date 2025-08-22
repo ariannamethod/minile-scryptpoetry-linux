@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "arianna-core"
+version = "0.1.0"
+description = "A minimal distribution of the Arianna Method core components"
+authors = [{ name = "Arianna Method" }]
+readme = "README.md"
+license = { text = "GPL-3.0-or-later" }
+requires-python = ">=3.8"
+dependencies = [
+    "regex",
+    "numpy",
+    "python-telegram-bot>=20,<21",
+    "tomli; python_version < \"3.11\"",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["arianna_core*"]
+
+[tool.arianna]
+n_gram_level = 2
+
