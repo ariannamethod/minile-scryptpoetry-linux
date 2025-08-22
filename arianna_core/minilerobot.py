@@ -1,4 +1,4 @@
-"""Telegram bot interface for mini_LE responses."""
+"""Telegram bot interface for minile responses."""
 
 import os
 import asyncio
@@ -16,32 +16,11 @@ from telegram.ext import (
 from . import mini_le
 
 # Импортируем скриптпоэтри
+# Импорт основной логики системы
 import sys
 import os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'skryptpoetry'))
-try:
-    from symphony import Symphony
-    from skryptmetrics import entropy, perplexity, resonance
-    sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'skryptpoetry', 'arianna_linux'))
-    from letsgo import run_script
-    SKRYPTPOETRY_AVAILABLE = True
-except ImportError:
-    SKRYPTPOETRY_AVAILABLE = False
-
-# Ленивая инициализация Symphony
-_symphony = None
-
-def _get_symphony():
-    """Ленивая инициализация Symphony только когда нужно."""
-    global _symphony
-    if _symphony is None and SKRYPTPOETRY_AVAILABLE:
-        try:
-            scripts_path = os.path.join(os.path.dirname(__file__), '..', 'skryptpoetry', 'tongue', 'prelanguage.md')
-            dataset_path = os.path.join(os.path.dirname(__file__), '..', 'skryptpoetry', 'datasets', 'dataset01.md')
-            _symphony = Symphony(dataset_path=dataset_path, scripts_path=scripts_path)
-        except Exception:
-            pass
-    return _symphony
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))  # Добавляем корневую папку
+from skryptbridge import process_message
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -51,46 +30,17 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 
 async def _send_response(update: Update, text: str) -> None:
-    """Send mini_LE's response with skryptpoetry visualization."""
+    """Send response using SkryptBridge."""
     try:
-        # Получаем ответ от MiniLE
-        if hasattr(asyncio, "to_thread"):
-            minile_reply = await asyncio.to_thread(mini_le.chat_response, text)
-        else:  # Python 3.8 fallback
-            loop = asyncio.get_running_loop()
-            minile_reply = await loop.run_in_executor(None, mini_le.chat_response, text)
-        
-        # Добавляем скриптпоэтри визуализацию
-        symphony = _get_symphony()
-        if SKRYPTPOETRY_AVAILABLE and symphony:
-            try:
-                # Получаем скрипт на основе ответа MiniLE
-                if hasattr(asyncio, "to_thread"):
-                    script_code = await asyncio.to_thread(symphony.respond, minile_reply)
-                    # Выполняем скрипт
-                    script_result = await asyncio.to_thread(run_script, script_code)
-                else:
-                    loop = asyncio.get_running_loop()
-                    script_code = await loop.run_in_executor(None, symphony.respond, minile_reply)
-                    # Выполняем скрипт
-                    script_result = await loop.run_in_executor(None, run_script, script_code)
-                
-                # Комбинируем ответы
-                combined_reply = f"{minile_reply}\n\n{script_result}"
-            except Exception:
-                combined_reply = minile_reply
-        else:
-            combined_reply = minile_reply
-            
+        # Используем SkryptBridge для обработки сообщения
+        response = await process_message(text)
     except Exception as exc:  # pragma: no cover - unexpected failure
         import logging
-
         logging.exception("Response generation failed: %s", exc)
-        if update.message:
-            await update.message.reply_text("Error: failed to generate response.")
-        return
+        response = "Error: failed to generate response."
+    
     if update.message:
-        await update.message.reply_text(combined_reply)
+        await update.message.reply_text(response)
 
 
 async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
