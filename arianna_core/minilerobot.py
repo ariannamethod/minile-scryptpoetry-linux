@@ -22,9 +22,21 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'skryptpoetry'))
 try:
     from symphony import Symphony
     from skryptmetrics import entropy, perplexity, resonance
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'skryptpoetry', 'arianna_linux'))
+    from letsgo import run_script
     SKRYPTPOETRY_AVAILABLE = True
 except ImportError:
     SKRYPTPOETRY_AVAILABLE = False
+
+# Глобальная инициализация Symphony для производительности
+_symphony = None
+if SKRYPTPOETRY_AVAILABLE:
+    try:
+        scripts_path = os.path.join(os.path.dirname(__file__), '..', 'skryptpoetry', 'tongue', 'prelanguage.md')
+        dataset_path = os.path.join(os.path.dirname(__file__), '..', 'skryptpoetry', 'datasets', 'dataset01.md')
+        _symphony = Symphony(dataset_path=dataset_path, scripts_path=scripts_path)
+    except Exception:
+        pass
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -44,19 +56,18 @@ async def _send_response(update: Update, text: str) -> None:
             minile_reply = await loop.run_in_executor(None, mini_le.chat_response, text)
         
         # Добавляем скриптпоэтри визуализацию
-        if SKRYPTPOETRY_AVAILABLE:
+        if SKRYPTPOETRY_AVAILABLE and _symphony:
             try:
-                # Инициализируем Symphony с правильными путями
-                scripts_path = os.path.join(os.path.dirname(__file__), '..', 'skryptpoetry', 'tongue', 'prelanguage.md')
-                dataset_path = os.path.join(os.path.dirname(__file__), '..', 'skryptpoetry', 'datasets', 'dataset01.md')
-                symphony = Symphony(dataset_path=dataset_path, scripts_path=scripts_path)
-                
-                # Получаем визуализацию на основе ответа MiniLE
+                # Получаем скрипт на основе ответа MiniLE
                 if hasattr(asyncio, "to_thread"):
-                    script_result = await asyncio.to_thread(symphony.respond, minile_reply)
+                    script_code = await asyncio.to_thread(_symphony.respond, minile_reply)
+                    # Выполняем скрипт
+                    script_result = await asyncio.to_thread(run_script, script_code)
                 else:
                     loop = asyncio.get_running_loop()
-                    script_result = await loop.run_in_executor(None, symphony.respond, minile_reply)
+                    script_code = await loop.run_in_executor(None, _symphony.respond, minile_reply)
+                    # Выполняем скрипт
+                    script_result = await loop.run_in_executor(None, run_script, script_code)
                 
                 # Комбинируем ответы
                 combined_reply = f"{minile_reply}\n\n{script_result}"
