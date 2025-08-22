@@ -250,6 +250,74 @@ python -c "from arianna_core.evolution_safe import evolve_cycle; evolve_cycle()"
 that the system continues to grow from its textual traces without ever relying
 on static weights.
 
+## Skryptpoetry Expansion
+
+### Skryptpoetry AI Engine
+
+The skryptpoetry AI engine introduces a lightweight training core that watches the repository for new knowledge and trains only on unseen files, keeping learning efficient and adaptive to change.
+
+Each request triggers a repository scan so fresh material is assimilated before any learning happens, preventing redundant computation and ensuring synchronization with evolving datasets.
+
+All interactions are archived by an integrated logging module that records messages, chosen scripts, and metrics to create a chronological record of the engine's evolution and contextual decisions.
+
+A metrics library measures entropy, perplexity, resonance, and token charge, offering rapid insight into message complexity, predictive surprise, and textual alignment.
+
+At the center sits the Symphony agent which synchronizes training, performs retrieval, calculates metrics, and records logs, allowing a compact conversational loop.
+
+Datasets housed in `datasets` or `tongue` directories are parsed automatically and hashed; configurable `allowed_extensions` and `excluded_parts` parameters tailor which files contribute to learning.
+
+Contextual passages are retrieved internally using a Jaccard-based resonance score, grounding responses in the documents with the highest lexical overlap.
+
+The architecture is modular and CPU-only, encouraging future expansion of models, metrics, and training routines without entangling GPU dependencies.
+
+Training runs are protected by a thread-safe scan lock and may be invoked asynchronously, allowing background learning while the system stays responsive.
+
+A SQLite-backed logging layer tracks used scripts and file hashes to avoid repetition and support incremental learning as directories are continually watched for changes.
+
+### Arianna Method Linux Kernel
+
+The Arianna Method Linux Kernel (AMLK) is a compact operating nucleus built from Alpine sources, booting with a minimal initramfs and layering state through OverlayFS while ext4 journaling guards against data loss.
+
+Namespaces and cgroup hierarchies isolate processes and resource trees, allowing precise CPU and RAM control within a deterministic environment.
+
+Python 3.10+ and Node.js 18+ come preinstalled alongside a minimal toolkit of bash, curl, and nano, forming a streamlined vertex set in the dependency graph.
+
+The bundled CLI terminal `letsgo.py` logs every session under `/arianna_core/log`, proving a foundation for higher reasoning modules and timestamped dialogue chronicles.
+
+Build scripts download kernel sources, verify checksums, and set configuration predicates for ext4, OverlayFS, and isolation before `make -j n` compiles the image and cpio plus gzip assemble the initramfs.
+
+The resulting bzImage pairs with the initramfs for QEMU booting, with console output directed to ttyS0 for headless operation and easy logging, while inside QEMU version checks validate Python and Node.
+
+Environment variables such as `API_TOKEN`, `TELEGRAM_TOKEN`, and `PORT` configure the bridge and HTTP server, tying the kernel to web and messaging interfaces.
+
+Token setup involves exporting the secrets before launching `bridge.py`, and a sample run demonstrates how API and Telegram tokens enable authenticated terminal sessions.
+
+The kernel targets generic x86_64 CPUs, omitting GPU drivers, while a CI pipeline builds and boots the system in QEMU using software acceleration on CPU-only runners.
+
+Future interfaces will expose the terminal through REST, WebSocket, and Telegram bridges, allowing multiple clients to share history and interact with the same kernel instance.
+
+### Integration and Geometric Evolution
+
+MINILE remains the vocal core, but the skryptpoetry engine extends its reach by translating human language into skrypts, linking textual resonance with executable scripts.
+
+AMLK provides a deterministic kernel that hosts the skryptpoetry stack, ensuring that script startup occurs in a controlled environment where every module's behavior can be measured like vectors in a geometric space.
+
+When a user sends a message, the Symphony agent of skryptpoetry scans the repository, and on AMLK the same process boots quickly thanks to the minimal initramfs, producing a geometric test of system stability.
+
+The logging layers of both modules synchronize, so message histories from `mini_le` and `letsgo.py` can be replayed across interfaces, forming geometric cycles of inquiry and response.
+
+Metrics from skryptpoetry feed into AMLK's terminals, where entropy and resonance values can be monitored alongside CPU and uptime statistics, giving users a multi-dimensional diagnostic view.
+
+Geometric tests—where each iteration of training and retrieval scales like a progression—drive the continuous refinement of scripts and kernel interactions, improving the user experience as patterns converge.
+
+Because minile learns to speak by retraining on logs, the integration with skryptpoetry's incremental engine ensures that every geometric test of language reflects the latest interactions.
+
+AMLK's resource isolation allows multiple skryptpoetry agents to run as independent vectors, letting the system explore different conversational angles without interference.
+
+The combined architecture encourages experimentation: scripts can mutate through geometric transformations while the kernel keeps execution deterministic, making failures easy to trace and repeat.
+
+Together, these modules embody a growing resonance network where geometry, language, and code intersect—each script launch a new polygon in minile's expanding ability to communicate.
+
 ## License
 
 Source code is distributed under the [GNU GPLv3](LICENSE) by **Oleg Ataeff & Arianna Method**.
