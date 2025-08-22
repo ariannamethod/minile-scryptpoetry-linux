@@ -111,9 +111,9 @@ class Symphony:
         # Убираем медленный scan_and_train для скорости
         self.user_messages.append(message)
         total_size = sum(len(m) for m in self.user_messages)
-        if total_size > 5000:
-            self.trainer.train_on_text_async('\n'.join(self.user_messages))
-            self.user_messages.clear()
+        # Обучение каждые 4 сообщения
+        if len(self.user_messages) % 4 == 0:
+            self.trainer.train_on_text_async('\n'.join(self.user_messages[-4:]))  # Только последние 4
 
         # Быстрый выбор скрипта без медленных операций
         try:
