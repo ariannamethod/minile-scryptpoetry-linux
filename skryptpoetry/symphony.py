@@ -96,7 +96,7 @@ class Symphony:
         return best_script
 
     def respond(self, message: str) -> str:
-        self.trainer.scan_and_train()
+        # Убираем медленный scan_and_train для скорости
         self.user_messages.append(message)
         total_size = sum(len(m) for m in self.user_messages)
         if total_size > 5000:
