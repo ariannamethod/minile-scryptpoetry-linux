@@ -228,9 +228,12 @@ def chat_response(message: str, refresh: bool = False) -> str:
             collective_snippets = _get_collective_snippets()
             snippets = load_snippets(data_files) + collective_snippets
             
-            # ChaosSearch для RAG поиска
+            # ChaosSearch для RAG поиска - ОГРАНИЧИВАЕМ для скорости
             if snippets:
-                _rag_search = ChaosSearch(snippets)  # CHAOS RESONANCE RAG!
+                # Берем только последние 1000 снипетов для быстрой работы
+                limited_snippets = snippets[-1000:] if len(snippets) > 1000 else snippets
+                _rag_search = ChaosSearch(limited_snippets)  # CHAOS RESONANCE RAG!
+                logging.info(f"🔍 ChaosSearch initialized with {len(limited_snippets)} snippets (из {len(snippets)})")
         except Exception as exc:
             logging.warning("Failed to initialize RAG search: %s", exc)
     
