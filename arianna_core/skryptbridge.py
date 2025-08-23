@@ -140,12 +140,24 @@ def process_message_sync(message: str) -> str:
         minile_reply = ""
         script_result = ""
         
+        # Собираем результаты с диагностикой
+        received = 0
         for _ in range(2):
-            result_type, result_data = results.get(timeout=60)
-            if result_type == 'minile':
-                minile_reply = result_data
-            elif result_type == 'symphony':
-                script_result = result_data
+            try:
+                result_type, result_data = results.get(timeout=10)  # Короче timeout
+                received += 1
+                if result_type == 'minile':
+                    minile_reply = result_data
+                    logging.info(f"✅ MiniLE completed: {len(result_data)} chars")
+                elif result_type == 'symphony':
+                    script_result = result_data
+                    logging.info(f"✅ Symphony completed: {len(result_data)} chars")
+                elif result_type == 'minile_error':
+                    logging.error(f"❌ MiniLE error: {result_data}")
+                    minile_reply = "MiniLE error occurred"
+            except:
+                logging.warning(f"⏰ Thread timeout after {received} results")
+                break
         
         t1.join()
         t2.join()
