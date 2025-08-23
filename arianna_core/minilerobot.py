@@ -1,4 +1,4 @@
-"""Telegram bot interface for minile responses."""
+"""Telegram bot interface for mini_LE responses."""
 
 import os
 import asyncio
@@ -17,10 +17,11 @@ from . import mini_le
 
 # Импортируем скриптпоэтри
 # Импорт основной логики системы
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))  # Добавляем корневую папку
-from skryptbridge import process_message
+try:
+    from .skryptbridge import process_message
+except ImportError:
+    # Fallback для Railway
+    from arianna_core.skryptbridge import process_message
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
