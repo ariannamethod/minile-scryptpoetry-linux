@@ -251,7 +251,7 @@ def chat_response(message: str, refresh: bool = False) -> str:
     # 🎭 БИОЛОГИЧЕСКОЕ СОСТОЯНИЕ влияет на генерацию
     bio_state = _update_bio_state(message, chaos_level, breath_response)
     
-    # 🌐 OBJECTIVITY - веб-поиск для контекста
+    # 🌐 OBJECTIVITY - веб-поиск для контекста  
     web_context = {'context_lines': [], 'influence_strength': 0.0, 'context_words': []}
     try:
         web_context = search_objectivity_sync(message)
