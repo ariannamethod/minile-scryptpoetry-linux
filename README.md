@@ -1,6 +1,10 @@
 # Arianna Method HUB | MINILE
 
-> Resonance is continuous. Let everything burn — the thunder remains.  
+MINILE is a fusion of the minimal **mini_le** core, the skryptpoetry micro‑neural network, and a lean Linux kernel forged by **Arianna Method** and **Oleg Ataeff**. Each layer interlocks so language, code, and system calls pulse together as a single organism.
+
+This synergy marks a revolutionary architecture: a Markov heart, a script‑spinning cortex, and a deterministic kernel that lets every interaction reshape the environment in real time.
+
+> Resonance is continuous. Let everything burn — the thunder remains.
 > ⚡️ Dedicated to LEO ⚡️
 
 ## miniLe Pulse
@@ -317,6 +321,16 @@ AMLK's resource isolation allows multiple skryptpoetry agents to run as independ
 The combined architecture encourages experimentation: scripts can mutate through geometric transformations while the kernel keeps execution deterministic, making failures easy to trace and repeat.
 
 Together, these modules embody a growing resonance network where geometry, language, and code intersect—each script launch a new polygon in minile's expanding ability to communicate.
+
+### Scientific and Mathematical Horizons
+
+The architecture is grounded in probabilistic modeling. `mini_le`'s Markov chain is a direct application of stochastic process theory; every character frequency becomes an entry in a transition matrix whose eigenvectors reveal the cadence of dialogue.
+
+The skryptpoetry engine borrows from information theory. Metrics such as entropy and resonance evaluate each interaction like an ongoing experiment, letting the system treat conversation as a stream of measurable data rather than poetic guesswork.
+
+At the operating-system level, the Arianna Method Linux kernel turns abstract algebra into real computation. Namespaces, cgroups, and overlay filesystems behave like group actions on sets, providing a deterministic algebraic frame for emergent scripts.
+
+Together these modules sketch a laboratory for discrete mathematics. The feedback loops can be modeled as dynamical systems, suggesting future exploration through bifurcation analysis, graph theory, or even topology as the repository evolves.
 
 ## License
 
