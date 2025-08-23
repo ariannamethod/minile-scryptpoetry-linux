@@ -51,14 +51,23 @@ class Symphony:
     def __init__(self,
                  dataset_path: str = 'datasets/dataset01.md',
                  scripts_path: str = 'tongue/prelanguage.md') -> None:
-        init_db()
-        self.dataset_path = Path(dataset_path)
+        # НЕ СОЗДАЕМ TRAINER - будем использовать память MiniLE
         self.scripts_path = Path(scripts_path)
-        self.trainer = SkryptTrainer()
-        # Убираем медленную инициализацию обучения
-        self.dataset_text = _load_file(self.dataset_path)
         self.scripts_text = _load_file(self.scripts_path)
         self.user_messages: List[str] = []
+        self.total_processed_size = 0
+        
+        # Для отслеживания изменений только в нужных папках
+        self._scripts_hash = self._get_file_hash(str(scripts_path))
+        
+    def _get_file_hash(self, filepath: str) -> str:
+        """Получить SHA256 хэш файла."""
+        import hashlib
+        try:
+            with open(filepath, 'rb') as f:
+                return hashlib.sha256(f.read()).hexdigest()
+        except:
+            return ""
 
     def _available_scripts(self) -> List[str]:
         if not self.scripts_path.exists():
@@ -77,7 +86,13 @@ class Symphony:
             for line in self.scripts_text.splitlines()
             if line.strip()
         ]
-        return [s for s in scripts if not script_used(s)] or scripts
+        # ИСПОЛЬЗУЕМ ПРОСТОЙ КЭШ ВМЕСТО SQLite для избежания блокировок
+        if not hasattr(self, '_used_scripts'):
+            self._used_scripts = set()
+        
+        # Фильтруем использованные скрипты из памяти
+        available = [s for s in scripts if s not in self._used_scripts]
+        return available or scripts  # Если все использованы, возвращаем все
 
     def _choose_script(self, message: str) -> str:
         options = self._available_scripts()
@@ -95,15 +110,28 @@ class Symphony:
         random.seed(hash_seed)
         
         # БЫСТРЫЙ выбор - берем случайный скрипт без медленного resonance
-        return random.choice(options)
+        chosen_script = random.choice(options)
+        
+        # Отмечаем скрипт как использованный в памяти
+        if not hasattr(self, '_used_scripts'):
+            self._used_scripts = set()
+        self._used_scripts.add(chosen_script)
+        
+        return chosen_script
 
     def respond(self, message: str) -> str:
-        # Убираем медленный scan_and_train для скорости
+        # Проверяем изменения в скриптах по SHA256
+        current_hash = self._get_file_hash(str(self.scripts_path))
+        if current_hash != self._scripts_hash:
+            self.scripts_text = _load_file(self.scripts_path)
+            self._scripts_hash = current_hash
+            logging.info("🔄 Scripts updated, reloaded")
+        
+        # НЕ ОБУЧАЕМСЯ - используем память MiniLE
+        # Просто считаем размер для логики (но не обучаемся)
         self.user_messages.append(message)
-        total_size = sum(len(m) for m in self.user_messages)
-        # Обучение каждые 4 сообщения
-        if len(self.user_messages) % 4 == 0:
-            self.trainer.train_on_text_async('\n'.join(self.user_messages[-4:]))  # Только последние 4
+        if len(self.user_messages) > 50:  # Ограничиваем память
+            self.user_messages = self.user_messages[-25:]
 
         # Быстрый выбор скрипта без медленных операций
         try:
