@@ -95,8 +95,9 @@ async def process_message(message: str) -> str:
                 return minile_reply
             
     except Exception as e:
-        logging.error(f"Message processing failed: {e}")
-        return "Error: failed to generate response."
+        logging.debug(f"Message processing failed: {e}")
+        # Тихий фолбэк - только MiniLE
+        return mini_le.chat_response(message)
 
 def process_message_sync(message: str) -> str:
     """Синхронная версия для не-async интерфейсов."""
@@ -165,8 +166,9 @@ def process_message_sync(message: str) -> str:
         return f"{minile_reply}\n\n{script_result}" if script_result else minile_reply
             
     except Exception as e:
-        logging.error(f"Sync message processing failed: {e}")
-        return "Error: failed to generate response."
+        logging.debug(f"Sync message processing failed: {e}")
+        # Тихий фолбэк - только MiniLE
+        return mini_le.chat_response(message)
 
 if __name__ == "__main__":
     # Тест системы
