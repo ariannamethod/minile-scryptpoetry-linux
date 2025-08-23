@@ -18,28 +18,23 @@ except ImportError:
     # Fallback для прямого запуска
     import mini_le
 
-# Импорты Skryptpoetry
-try:
-    from symphony import Symphony
-    from letsgo import run_script
-    SKRYPTPOETRY_AVAILABLE = True
-except ImportError as e:
-    logging.warning(f"Skryptpoetry not available: {e}")
-    SKRYPTPOETRY_AVAILABLE = False
+# ВРЕМЕННО ОТКЛЮЧАЕМ Skryptpoetry для диагностики
+SKRYPTPOETRY_AVAILABLE = False
 
-# Глобальная Symphony - инициализируем сразу
+# Ленивая инициализация Symphony - НЕ при импорте
 _symphony = None
-if SKRYPTPOETRY_AVAILABLE:
-    try:
-        scripts_path = os.path.join(os.path.dirname(__file__), '..', 'skryptpoetry', 'tongue', 'prelanguage.md')
-        dataset_path = os.path.join(os.path.dirname(__file__), '..', 'skryptpoetry', 'datasets', 'dataset01.md')
-        _symphony = Symphony(dataset_path=dataset_path, scripts_path=scripts_path)
-        logging.info("✅ Symphony initialized at import")
-    except Exception as e:
-        logging.error(f"❌ Symphony initialization failed: {e}")
 
 def _get_symphony():
-    """Возвращает готовую Symphony."""
+    """Создает Symphony только при первом обращении."""
+    global _symphony
+    if _symphony is None and SKRYPTPOETRY_AVAILABLE:
+        try:
+            scripts_path = os.path.join(os.path.dirname(__file__), '..', 'skryptpoetry', 'tongue', 'prelanguage.md')
+            dataset_path = os.path.join(os.path.dirname(__file__), '..', 'skryptpoetry', 'datasets', 'dataset01.md')
+            _symphony = Symphony(dataset_path=dataset_path, scripts_path=scripts_path)
+            logging.info("✅ Symphony initialized lazily")
+        except Exception as e:
+            logging.error(f"❌ Symphony initialization failed: {e}")
     return _symphony
 
 async def process_message(message: str) -> str:
@@ -48,33 +43,39 @@ async def process_message(message: str) -> str:
     Возвращает ответ MiniLE + визуализация Skryptpoetry.
     """
     try:
-        # 1. Получаем ответ от MiniLE
-        if hasattr(asyncio, "to_thread"):
-            minile_reply = await asyncio.to_thread(mini_le.chat_response, message)
-        else:  # Python 3.8 fallback
-            loop = asyncio.get_running_loop()
-            minile_reply = await loop.run_in_executor(None, mini_le.chat_response, message)
-        
-        # 2. Добавляем Skryptpoetry визуализацию
+        # ЗАПУСКАЕМ MiniLE И Symphony ПАРАЛЛЕЛЬНО
         symphony = _get_symphony()
-        if SKRYPTPOETRY_AVAILABLE and symphony:
-            try:
-                # Получаем скрипт на основе ответа MiniLE
-                if hasattr(asyncio, "to_thread"):
-                    script_code = await asyncio.to_thread(symphony.respond, minile_reply)
-                    script_result = await asyncio.to_thread(run_script, script_code)
-                else:
-                    loop = asyncio.get_running_loop()
-                    script_code = await loop.run_in_executor(None, symphony.respond, minile_reply)
-                    script_result = await loop.run_in_executor(None, run_script, script_code)
+        
+        if hasattr(asyncio, "to_thread"):
+            # Параллельный запуск
+            minile_task = asyncio.to_thread(mini_le.chat_response, message)
+            
+            if SKRYPTPOETRY_AVAILABLE and symphony:
+                # Symphony работает с message, а не с ответом MiniLE
+                script_task = asyncio.to_thread(symphony.respond, message)
                 
-                # Комбинируем ответы
+                # Ждем оба результата
+                minile_reply, script_code = await asyncio.gather(minile_task, script_task)
+                
+                # Выполняем скрипт
+                script_result = await asyncio.to_thread(run_script, script_code)
                 return f"{minile_reply}\n\n{script_result}"
-            except Exception as e:
-                logging.debug(f"Skryptpoetry visualization failed: {e}")
+            else:
+                minile_reply = await minile_task
                 return minile_reply
         else:
-            return minile_reply
+            # Python 3.8 fallback - тоже параллельно
+            loop = asyncio.get_running_loop()
+            minile_task = loop.run_in_executor(None, mini_le.chat_response, message)
+            
+            if SKRYPTPOETRY_AVAILABLE and symphony:
+                script_task = loop.run_in_executor(None, symphony.respond, message)
+                minile_reply, script_code = await asyncio.gather(minile_task, script_task)
+                script_result = await loop.run_in_executor(None, run_script, script_code)
+                return f"{minile_reply}\n\n{script_result}"
+            else:
+                minile_reply = await minile_task
+                return minile_reply
             
     except Exception as e:
         logging.error(f"Message processing failed: {e}")
@@ -83,20 +84,53 @@ async def process_message(message: str) -> str:
 def process_message_sync(message: str) -> str:
     """Синхронная версия для не-async интерфейсов."""
     try:
-        # MiniLE ответ
-        minile_reply = mini_le.chat_response(message)
+        # ПАРАЛЛЕЛЬНОЕ ВЫПОЛНЕНИЕ ДАЖЕ В СИНХРОННОЙ ВЕРСИИ
+        import threading
+        import queue
         
-        # Skryptpoetry визуализация
-        symphony = _get_symphony()
-        if SKRYPTPOETRY_AVAILABLE and symphony:
+        results = queue.Queue()
+        
+        def minile_worker():
             try:
-                script_code = symphony.respond(minile_reply)
-                script_result = run_script(script_code)
-                return f"{minile_reply}\n\n{script_result}"
+                result = mini_le.chat_response(message)
+                results.put(('minile', result))
+            except Exception as e:
+                results.put(('minile_error', str(e)))
+        
+        def symphony_worker():
+            try:
+                symphony = _get_symphony()
+                if SKRYPTPOETRY_AVAILABLE and symphony:
+                    script_code = symphony.respond(message)  # Работает с исходным сообщением
+                    script_result = run_script(script_code)
+                    results.put(('symphony', script_result))
+                else:
+                    results.put(('symphony', ''))
             except Exception:
-                return minile_reply
-        else:
-            return minile_reply
+                results.put(('symphony', ''))
+        
+        # Запускаем параллельно
+        t1 = threading.Thread(target=minile_worker)
+        t2 = threading.Thread(target=symphony_worker)
+        
+        t1.start()
+        t2.start()
+        
+        # Собираем результаты
+        minile_reply = ""
+        script_result = ""
+        
+        for _ in range(2):
+            result_type, result_data = results.get(timeout=60)
+            if result_type == 'minile':
+                minile_reply = result_data
+            elif result_type == 'symphony':
+                script_result = result_data
+        
+        t1.join()
+        t2.join()
+        
+        return f"{minile_reply}\n\n{script_result}" if script_result else minile_reply
             
     except Exception as e:
         logging.error(f"Sync message processing failed: {e}")
