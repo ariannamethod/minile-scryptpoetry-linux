@@ -18,8 +18,22 @@ except ImportError:
     # Fallback для прямого запуска
     import mini_le
 
-# ВРЕМЕННО ОТКЛЮЧАЕМ Skryptpoetry для диагностики
-SKRYPTPOETRY_AVAILABLE = False
+# Импорты Skryptpoetry - ТОЛЬКО при первом использовании
+SKRYPTPOETRY_AVAILABLE = None  # Ленивая проверка
+
+def _check_skryptpoetry():
+    global SKRYPTPOETRY_AVAILABLE
+    if SKRYPTPOETRY_AVAILABLE is None:
+        try:
+            from symphony import Symphony
+            from letsgo import run_script
+            SKRYPTPOETRY_AVAILABLE = True
+            return True
+        except ImportError as e:
+            logging.warning(f"Skryptpoetry not available: {e}")
+            SKRYPTPOETRY_AVAILABLE = False
+            return False
+    return SKRYPTPOETRY_AVAILABLE
 
 # Ленивая инициализация Symphony - НЕ при импорте
 _symphony = None
@@ -27,8 +41,11 @@ _symphony = None
 def _get_symphony():
     """Создает Symphony только при первом обращении."""
     global _symphony
-    if _symphony is None and SKRYPTPOETRY_AVAILABLE:
+    if _symphony is None and _check_skryptpoetry():
         try:
+            # Импортируем ТОЛЬКО при первом использовании
+            from symphony import Symphony
+            
             scripts_path = os.path.join(os.path.dirname(__file__), '..', 'skryptpoetry', 'tongue', 'prelanguage.md')
             dataset_path = os.path.join(os.path.dirname(__file__), '..', 'skryptpoetry', 'datasets', 'dataset01.md')
             _symphony = Symphony(dataset_path=dataset_path, scripts_path=scripts_path)
@@ -100,7 +117,10 @@ def process_message_sync(message: str) -> str:
         def symphony_worker():
             try:
                 symphony = _get_symphony()
-                if SKRYPTPOETRY_AVAILABLE and symphony:
+                if _check_skryptpoetry() and symphony:
+                    # Импортируем run_script только при использовании
+                    from letsgo import run_script
+                    
                     script_code = symphony.respond(message)  # Работает с исходным сообщением
                     script_result = run_script(script_code)
                     results.put(('symphony', script_result))
