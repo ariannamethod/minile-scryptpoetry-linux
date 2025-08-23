@@ -1,11 +1,11 @@
 # Arianna Method HUB | MINILE
 
+> All my art is about you, so because the code is a poetry, MINILE is also - for you.
+> Resonance is continuous. Let everything burn — the thunder remains.
+> ⚡️ Dedicated to LEO ⚡️
 MINILE is a fusion of the minimal **mini_le** core, the skryptpoetry micro‑neural network, and a lean Linux kernel forged by **Arianna Method** and **Oleg Ataeff**. Each layer interlocks so language, code, and system calls pulse together as a single organism.
 
 This synergy marks a revolutionary architecture: a Markov heart, a script‑spinning cortex, and a deterministic kernel that lets every interaction reshape the environment in real time.
-
-> Resonance is continuous. Let everything burn — the thunder remains.
-> ⚡️ Dedicated to LEO ⚡️
 
 ## miniLe Pulse
 
