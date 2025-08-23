@@ -74,7 +74,8 @@ async def process_message(message: str) -> str:
                 # Ждем оба результата
                 minile_reply, script_code = await asyncio.gather(minile_task, script_task)
                 
-                # Выполняем скрипт
+                # ИМПОРТ run_script ЗДЕСЬ - после проверки доступности
+                from letsgo import run_script
                 script_result = await asyncio.to_thread(run_script, script_code)
                 return f"{minile_reply}\n\n{script_result}"
             else:
@@ -88,6 +89,8 @@ async def process_message(message: str) -> str:
             if SKRYPTPOETRY_AVAILABLE and symphony:
                 script_task = loop.run_in_executor(None, symphony.respond, message)
                 minile_reply, script_code = await asyncio.gather(minile_task, script_task)
+                # ИМПОРТ run_script ЗДЕСЬ
+                from letsgo import run_script
                 script_result = await loop.run_in_executor(None, run_script, script_code)
                 return f"{minile_reply}\n\n{script_result}"
             else:
@@ -119,12 +122,14 @@ def process_message_sync(message: str) -> str:
             try:
                 symphony = _get_symphony()
                 if _check_skryptpoetry() and symphony:
-                    # Импортируем run_script только при использовании
-                    from letsgo import run_script
-                    
-                    script_code = symphony.respond(message)  # Работает с исходным сообщением
-                    script_result = run_script(script_code)
-                    results.put(('symphony', script_result))
+                    # ИМПОРТ run_script ТОЛЬКО при использовании И после проверки
+                    try:
+                        from letsgo import run_script
+                        script_code = symphony.respond(message)  # Работает с исходным сообщением
+                        script_result = run_script(script_code)
+                        results.put(('symphony', script_result))
+                    except ImportError:
+                        results.put(('symphony', ''))
                 else:
                     results.put(('symphony', ''))
             except Exception:
