@@ -17,6 +17,7 @@ from datetime import datetime
 from pathlib import Path
 from collections import deque
 from typing import (
+    Any,
     Awaitable,
     Callable,
     Deque,
@@ -85,28 +86,44 @@ def choose_script(message: str) -> str:
 
 
 def run_script(code: str) -> str:
+    """Execute ``code`` and return captured output or formatted errors."""
+    import io
+    import sys
+    import traceback
+    from contextlib import redirect_stdout, redirect_stderr
+
+    local_vars: dict[str, Any] = {}
+    global_vars = {'__builtins__': __builtins__}
+
+    stdout_buffer = io.StringIO()
+    stderr_buffer = io.StringIO()
+
     try:
-        # Быстрое выполнение через exec() вместо subprocess
-        local_vars = {}
-        global_vars = {'__builtins__': __builtins__}
-        
-        # Перехватываем stdout
-        import io
-        import sys
-        old_stdout = sys.stdout
-        sys.stdout = captured_output = io.StringIO()
-        
-        try:
+        with redirect_stdout(stdout_buffer), redirect_stderr(stderr_buffer):
             exec(code, global_vars, local_vars)
-            result = captured_output.getvalue().strip()
-        finally:
-            sys.stdout = old_stdout
-            
-        return result
-    except Exception as exc:
+    except Exception as exc:  # pragma: no cover - exercised via tests
         _ensure_log_dir()
-        log_error(f"run_script failed: {exc}")
-        return ""  # Молчаливый фолбэк вместо показа ошибки
+        error_trace = traceback.format_exception_only(type(exc), exc)[-1].strip()
+        stderr_output = stderr_buffer.getvalue().strip()
+        stdout_output = stdout_buffer.getvalue().strip()
+        combined = "\n".join(
+            segment
+            for segment in (stdout_output, stderr_output, error_trace)
+            if segment
+        )
+        message = combined or error_trace or "Unknown script error"
+        log_error(f"run_script failed: {message}")
+        return f"Script error: {message}"
+
+    stdout_output = stdout_buffer.getvalue().strip()
+    stderr_output = stderr_buffer.getvalue().strip()
+    if stderr_output:
+        _ensure_log_dir()
+        log_error(f"run_script stderr: {stderr_output}")
+        if stdout_output:
+            return f"{stdout_output}\n{stderr_output}"
+        return stderr_output
+    return stdout_output
 
 
 @dataclass
