@@ -48,17 +48,23 @@ def retrieve(query: str, documents: Iterable[Union[Path, str]]) -> str:
 class Symphony:
     """Minimal interactive agent operating on small datasets."""
 
-    def __init__(self,
-                 dataset_path: str = 'datasets/dataset01.md',
-                 scripts_path: str = 'tongue/prelanguage.md') -> None:
+    def __init__(
+        self,
+        dataset_path: str = 'datasets/dataset01.md',
+        scripts_path: str = 'tongue/prelanguage.md',
+    ) -> None:
         # НЕ СОЗДАЕМ TRAINER - будем использовать память MiniLE
+        self.dataset_path = Path(dataset_path)
         self.scripts_path = Path(scripts_path)
         self.scripts_text = _load_file(self.scripts_path)
         self.user_messages: List[str] = []
         self.total_processed_size = 0
-        
+
         # Для отслеживания изменений только в нужных папках
         self._scripts_hash = self._get_file_hash(str(scripts_path))
+
+        # Ensure logging database exists for interaction tracking
+        init_db()
         
     def _get_file_hash(self, filepath: str) -> str:
         """Получить SHA256 хэш файла."""
@@ -138,8 +144,22 @@ class Symphony:
             script = self._choose_script(message)
         except (FileNotFoundError, ValueError, RuntimeError) as exc:
             return str(exc)
-        
-        # Убираем медленные метрики и логирование для скорости
+
+        # Compute lightweight metrics and persist interaction for observability
+        entropy_value = entropy(script)
+        perplexity_value = perplexity(script)
+        resonance_value = resonance(message, script)
+        try:
+            log_interaction(
+                message,
+                script,
+                entropy_value,
+                perplexity_value,
+                resonance_value,
+            )
+        except Exception as exc:  # pragma: no cover - defensive logging
+            logging.warning("log_interaction failed: %s", exc)
+
         return script
 
 
